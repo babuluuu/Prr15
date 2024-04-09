@@ -1,0 +1,103 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Beewiser - @ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Learning_App.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header background="red">
+        <div class="navbar navbar-dark bg-dark shadow-sm">
+            <div class="container" background="#F7E5FF">
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand d-flex align-items-center">
+                    <img src="/images/logo.png" width="100"/>
+                    <strong class="ms-2">МПТ-Kurs</strong>
+                </a>
+
+
+
+
+                @if (Context.Session.GetInt32("user_role") != null)
+                {
+
+                    <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Дом</a>
+                        </li>
+
+
+                        @if (Context.Session.GetInt32("user_role") == 99)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="AdminView">Пользователи</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="CreateUserView">Добавить пользователя</a>
+                            </li>
+                        }
+                        else if (Context.Session.GetInt32("user_role") == 2)
+                        {
+                            //tunahan-bas
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="InstructorView">Курсы</a>
+                            </li>
+                            //tunahan-bit
+                            
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="CreateCourse">Создать курс</a>
+                            </li>
+                            //tunahan-bas2
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="SubmitedAssignments">Отправленные задания</a>
+                            </li>
+                            //tunahan-bit2
+                        }
+                        <li class="nav-item">
+                            <a class="nav-link text-light" asp-controller="Home" asp-action="Logout">Выйти</a>
+                        </li>
+                    </ul>
+
+
+                    <span class="text-warning">Welcome @(Context.Session.GetString("user_name"))</span>
+                }
+                else
+                {
+                    <div>
+                        <a type="button" class="btn btn-outline-warning me-2" asp-area="" asp-controller="Home" asp-action="Login">
+                            <span>Авторизация</span>
+                        </a>
+                        <a type="button" class="btn btn-warning" asp-area="" asp-controller="Home" asp-action="SignUp">
+                            <span>Регистрация</span>
+                        </a>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </header>
+    @RenderBody()
+
+    <footer class="footer mt-auto py-3 bg-body-tertiary bg-dark">
+        <div class="container">
+            <span class="text-body-secondary text-white">Coded with love.</span>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+<style>
+    body
+	{
+        background-image: url('/images/background-image.jpg');
+		background-size: cover;
+		background-repeat: no-repeat;
+        margin-bottom: 0px !important;
+	}
+</style>

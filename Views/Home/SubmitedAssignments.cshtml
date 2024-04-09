@@ -1,0 +1,43 @@
+﻿@model List<Learning_App.Models.Response.ListAssignments>
+
+@{
+    ViewData["Title"] = "Submited Assignments";
+}
+
+
+<div class="bg-light container p-5 my-4">
+   <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Student Id</th> 
+                <th>Assignment Id</th>
+                <th>Файл</th>
+                <th>Результат</th>
+                <th>Введите новый результат</th> <!-- Instructor will write score here. -->
+            </tr>
+        </thead>
+        <tbody>
+        @foreach(var assignment in Model ?? new List<Learning_App.Models.Response.ListAssignments>())
+        {
+            <tr>
+                <td>@assignment.UserId</td>
+                <td>@assignment.AssignmentId</td>
+                <td>
+                    <!-- Display FileUrl as a link -->
+                    <a href="@assignment.FileUrl" target="_blank">Документ</a>
+                </td>
+                <td>@assignment.Score</td>
+                <td>
+                    <!-- Instructor will write score here. -->
+                    <form method="post" asp-action="UpdateScore" asp-controller="Home">
+                        <input type="hidden" name="assignmentId" value="@assignment.StudentCourseAssignmentId" />
+                            <input type="text" name="instructorInput" placeholder="Введите новый результат" />
+                            <button type="submit" class="btn btn-primary">Предоставить</button>
+                    </form>
+                </td>
+                
+            </tr>
+        }
+        </tbody>
+   </table>
+</div>

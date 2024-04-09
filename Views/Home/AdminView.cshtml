@@ -1,0 +1,59 @@
+﻿@model List<Learning_App.Models.Response.ListUserResponse>
+
+@{
+    ViewData["Title"] = "Admin Page";
+}
+
+
+<div class="bg-light container p-5 my-4">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>User ID</th>
+                <th>Фамилия</th>
+                <th>Имя</th>
+                <th>Email</th>
+                <th>Роль</th>
+                <th></th> <!-- Bu sütunda buton ekleyeceğiz -->
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.UserId</td>
+                    <td>@user.FirstName</td>
+                    <td>@user.LastName</td>
+                    <td>@user.Email</td>
+                    <td>
+                        @if ((int) user.Role == 1)
+                        {
+							<span class="text-success">Студент</span>
+						}
+						else if((int) user.Role == 2)
+						{
+							<span class="text-warning">Учитель</span>
+						}
+						else if((int) user.Role == 99)
+						{
+							<span class="text-primary">Админ</span>
+						}
+
+
+                    </td>
+                    <td>
+                        <!-- Çarpı işareti ile buton -->
+                        <form method="post" asp-action="DeleteUser" asp-controller="Home">
+                             <input type="hidden" name="userId" value="@user.UserId" />
+                             <button class="btn btn-danger">X</button>
+                        </form>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+</div>

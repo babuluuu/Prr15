@@ -1,0 +1,131 @@
+﻿@{
+    ViewData["Title"] = "Create Course";
+}
+
+
+<div class="container bg-white p-5 my-4">
+    <h2>Добавить курс</h2>
+
+    <form asp-controller="Home" asp-action="createCourseAction" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="Title">Название</label>
+            <input type="text" class="form-control" id="Title" name="Title" required>
+        </div>
+
+        <div class="form-group">
+            <label for="Description">Описание</label>
+            <textarea class="form-control" id="Description" name="Description" rows="4" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="ImageFile">Загрузить фото</label>
+            <input type="file" class="form-control-file" id="ImageFile" name="ImageFile" required>
+        </div>
+
+
+        <hr>
+
+        <h3>Уроки</h3>
+
+        <div id="lessons-container">
+        </div>
+
+        <button type="button" class="btn btn-primary" id="add-lesson-btn">Создать урок</button>
+
+        <hr>
+
+        <h3>Задание</h3>
+
+        <div id="assignments-container">
+        </div>
+
+        <button type="button" class="btn btn-primary" id="add-assignment-btn">Добавить задание</button>
+
+        <hr>
+
+        <button type="submit" class="btn btn-primary mt-4">Сохранить курс</button>
+    </form>
+</div>
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            var lessonCount = 0;
+            var assignmentCount = 0;
+
+            // Ders eklemek için buton tıklama işlemi
+            $("#add-lesson-btn").click(function () {
+                lessonCount++;
+
+                var lessonHtml = `
+                        <div class="lesson">
+                            <h4>Урок ${lessonCount}</h4>
+                            <div class="form-group">
+                                <label for="Lessons[${lessonCount - 1}].Title">Название урока </label>
+                                <input type="text" class="form-control" id="Lessons[${lessonCount - 1}].Title" name="Lessons[${lessonCount - 1}].Title" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="Lessons[${lessonCount - 1}].Description">Описание урока </label>
+                                <textarea class="form-control" id="Lessons[${lessonCount - 1}].Description" name="Lessons[${lessonCount - 1}].Description" rows="4" required></textarea>
+                            </div>
+
+                            <h5>Ресурсы</h5>
+
+                            <div class="resource">
+                                <div class="form-group">
+                                            <label for="Lessons[${lessonCount - 1}].Resources[${lessonCount - 1}].ResourceType">Тип ресурса</label>
+                                    <select class="form-control" id="Resources[${lessonCount - 1}].ResourceType" name="Resources[${lessonCount - 1}].ResourceType" required>
+                                        <option value="1">Видео</option>
+                                        <option value="2">PDF</option>
+                                        <option value="3">Статья</option>
+                                        <!-- Diğer resource türleri buraya eklenir -->
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                            <label for="Lessons[${lessonCount - 1}].Resources[${lessonCount - 1}].ContentInfo">Содержание ресурса</label>
+                                    <input type="text" class="form-control" id="Resources[${lessonCount - 1}].ContentInfo" name="Resources[${lessonCount - 1}].ContentInfo" required>
+                                </div>
+                            </div>
+
+                            <button type="button" class="btn btn-danger btn-sm remove-lesson-btn">Удалить урок</button>
+                        </div>`;
+
+                $("#lessons-container").append(lessonHtml);
+            });
+
+            // Dersi silme işlemi
+            $("#lessons-container").on("click", ".remove-lesson-btn", function () {
+                $(this).closest(".lesson").remove();
+            });
+
+            // Assignment eklemek için buton tıklama işlemi
+            $("#add-assignment-btn").click(function () {
+                assignmentCount++;
+
+                var assignmentHtml = `
+                        <div class="assignment">
+                            <h4>Задание ${assignmentCount}</h4>
+                            <div class="form-group">
+                                <label for="Assignments[${assignmentCount - 1}].Title">Название задания</label>
+                                <input type="text" class="form-control" id="Assignments[${assignmentCount - 1}].Title" name="Assignments[${assignmentCount - 1}].Title" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="Assignments[${assignmentCount - 1}].Description">Описание</label>
+                                <textarea class="form-control" id="Assignments[${assignmentCount - 1}].Description" name="Assignments[${assignmentCount - 1}].Description" rows="4" required></textarea>
+                            </div>
+
+                            <button type="button" class="btn btn-danger btn-sm remove-assignment-btn">Удалить задание</button>
+                        </div>`;
+
+                $("#assignments-container").append(assignmentHtml);
+            });
+
+            // Assignment'i silme işlemi
+            $("#assignments-container").on("click", ".remove-assignment-btn", function () {
+                $(this).closest(".assignment").remove();
+            });
+        });
+    </script>
+}

@@ -1,0 +1,40 @@
+﻿@model List<Learning_App.Models.Response.ListCourses>
+
+@{
+    ViewData["Title"] = "Instructor Page";
+}
+
+
+<div class="bg-light container p-5 my-4">
+   <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Тип</th> 
+                <th>Название курса</th>
+                <th>Описание курса</th>
+                <th></th> <!-- Bu sütunda buton ekleyeceğiz -->
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var course in Model)
+            {
+                <tr>
+                    <td><span class="text-dark">Course</span></td>
+                    <td>@course.Title</td>
+                    <td>@course.Description</td>
+                    
+                    <td>
+                        <!-- Çarpı işareti ile buton -->
+                        <form method="post" asp-action="DeleteCourse" asp-controller="Home">
+                             <input type="hidden" name="courseId" value="@course.CourseId" />
+                             <button class="btn btn-danger">X</button>
+                        </form>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+</div>

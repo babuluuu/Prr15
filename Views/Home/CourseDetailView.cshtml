@@ -1,0 +1,145 @@
+﻿@{
+    ViewData["Title"] = "Course Detail";
+}
+
+@model Learning_App.Models.Response.DetailedCourseInfo;
+
+<div class="container bg-white p-5 my-4">
+    <div class="row mb-5">
+        <div class="col-md-3">
+            <img src="@Model.ImageUrl" alt="@Model.Title" class="img-fluid">
+        </div>
+        <div class="col-md-9">
+            <h2>@Model.Title</h2>
+            <p>@Model.Description</p>
+            <p class="mt-2"> <b> Ваш прогресс: </b>  @Model.Grade%</p>
+            <div class="progress mt-0">
+                <div class="progress-bar" role="progressbar" style="width: @Model.Grade%;" aria-valuenow="@Model.Grade" aria-valuemin="0" aria-valuemax="100">@Model.Grade</div>
+            </div>
+
+            <!-- Add a Score Display -->
+            
+            
+            
+
+            <!-- Add a Score Display -->
+            <div class="">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="alert alert-warning mt-4">
+                            <b> Результат:    </b> <span class="font-weight-bold">@Model.Score</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <ul class="nav nav-tabs" id="myTabs">
+        <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#lessonsAccordion">Уроки</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#assignmentsAccordion">Задания</a>
+        </li>
+    </ul>
+
+    <div class="tab-content">
+        <div id="lessonsAccordion" class="container tab-pane active pt-3 accordion">
+            @foreach (var lesson in Model.Lessons)
+            {
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target=@("#collapse" + lesson.LessonId) aria-expanded="true" aria-controls=@("collapse" + lesson.LessonId)>
+                            @lesson.Title
+                        </button>
+                    </h2>
+                    <div id=@("collapse" + lesson.LessonId) class="accordion-collapse collapse" data-bs-parent="#lessonsAccordion">
+                        <div class="accordion-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                @lesson.Description
+                                <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target=@("#lessonModal" + lesson.LessonId)>
+                                    Показывать содержимое
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id=@("lessonModal" + lesson.LessonId) tabindex="-1" role="dialog" aria-labelledby=@("lessonModalLabel" + lesson.LessonId) aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title fs-5" id=@("lessonModalLabel" + lesson.LessonId)>Содержание урока: @lesson.Title</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <iframe class="iframe-window" src="@lesson.Resource.Content" frameborder="0" allowfullscreen></iframe>
+                            </div>
+                            <div class="modal-footer d-flex justify-content-between">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                                <a href="@Url.Action("NextLesson", "Home", new { courseId = Model.CourseId, lessonId = lesson.LessonId })" class="btn btn-primary">Next Lesson</a>
+                            </div>
+                          
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div id="assignmentsAccordion" class="container tab-pane fade pt-3 accordion">
+            @foreach (var assignment in Model.Assignments)
+            {
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target=@("#collapse" + assignment.AssignmentId) aria-expanded="true" aria-controls=@("collapse" + assignment.AssignmentId)>
+                            @assignment.Title
+                        </button>
+                    </h2>
+                    <div id=@("collapse" + assignment.AssignmentId) class="accordion-collapse collapse" data-bs-parent="#assignmentsAccordion">
+                        <div class="accordion-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                 @assignment.Description
+                                 @if(assignment.IsSubmitted)
+								 {
+									<span class="badge bg-success">Отправленный</span>
+								 }
+								 else
+								 {
+                                    <form method="post" enctype="multipart/form-data" action="@Url.Action("UploadAssignment", "Home")">
+                                        <div class="form-group">
+                                            <label for="fileUpload">Загрузить файл</label>
+                                            <input type="file" class="form-control-file" id="fileUpload" name="file">
+                                        </div>
+                                        <input type="hidden" name="assignmentId" value="@assignment.AssignmentId">
+                                        <input type="hidden" name="courseId" value="@Model.CourseId">
+                                        <button type="submit" class="btn btn-primary">Отправить</button>
+                                    </form>
+								 }
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $('#myTabs a').click(function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+            });
+        });
+    </script>
+}
+<style>
+    .iframe-window
+    {
+        width: 100%;
+        height: 40vh;
+    }
+</style>
