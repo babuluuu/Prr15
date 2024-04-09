@@ -15,7 +15,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-python@v2
         with:
-          python-version: '8.0.x'
+          python-version: '3.9.x'
 
       - name: Install dependencies python
         run: dothet restore
