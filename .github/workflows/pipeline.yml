@@ -1,0 +1,26 @@
+name: Code Style
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  style: 
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup .NET
+        uses: actions/setup-python@v2
+        with:
+          python-version: '8.0.x'
+
+      - name: Install dependencies python
+        run: dothet restore
+
+      - name: Check code style
+        run: |
+          dothet add package StyleCop.Analyzers --version 1.1.118
+          dothet build /p:StyleCopEnabled=true
