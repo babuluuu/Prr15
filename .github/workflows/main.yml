@@ -1,4 +1,4 @@
-name: Build and Analyze
+name: Code Style
 
 on:
   push:
@@ -6,23 +6,21 @@ on:
       - main
 
 jobs:
-  build-and-analyze: 
-    runs-on: windows-latest
+  style: 
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-      - name: Setup Python
+      - name: Setup .NET
         uses: actions/setup-python@v2
         with:
-          python-version: '3.9.x'
+          python-version: '8.0.x'
 
-      - name: Restore dependencies
+      - name: Install dependencies python
         run: dothet restore
 
-      - name: Install NuGet package
-        run: dothet add package E-Learning-Management-Web-App-master/E-Learning-Management-Web-App-master.csproj package Microsoft.CodeAnalysis.NetAnalyzers --version 8.0.0
-
-      - name: Run Roslyn Analyzers
-        run: dotnet build E-Learning-Management-Web-App-master/E-Learning-Management-Web-App-master.csproj /p:WarningLevel=6 /p:DebugSymbols=false /p:Platform="Any CPU" /p:TreatWarningsAsErrors=true
+      - name: Check code style
+        run: |
+          dothet add package StyleCop.Analyzers --version 1.1.118
+          dothet build /p:StyleCopEnabled=true
